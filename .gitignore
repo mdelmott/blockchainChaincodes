@@ -1,0 +1,5 @@
+.idea/
+ChaincodeExample/.idea/
+ChaincodeExample/target/
+shim/java/.idea/
+shim/java/build/
