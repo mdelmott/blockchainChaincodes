@@ -84,7 +84,7 @@ public abstract class ChaincodeBase {
 
 		}
 
-		Runnable chaincode = function() {
+		Runnable chaincode = () -> {
 			logger.trace("chaincode started");
 			ManagedChannel connection = newPeerClientConnection();
 			logger.trace("connection created");
