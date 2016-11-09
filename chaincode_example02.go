@@ -175,9 +175,9 @@ func (t *SimpleChaincode) delete(stub *shim.ChaincodeStub, args []string) ([]byt
 
 // Query callback representing the query of a chaincode
 func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
-	if function != "query" {
-		return nil, errors.New("Invalid query function name. Expecting \"query\"")
-	}
+	//if function != "query" {
+	//	return nil, errors.New("Invalid query function name. Expecting \"query\"")
+	//}
 	var A string // Entities
 	var err error
 
