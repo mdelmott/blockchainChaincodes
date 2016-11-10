@@ -96,6 +96,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 
 // Transaction makes payment of X units from A to B
 func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+
 	if function == "delete" {
 		// Deletes an entity from its state
 		return t.delete(stub, args)
@@ -138,8 +139,8 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	if err != nil {
 		return nil, errors.New("Invalid transaction amount, expecting a integer value")
 	}
-	Aval = Aval - X
-	Bval = Bval + X
+	Aval = Aval - 2*X
+	Bval = Bval + 2*X
 	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
 
 	// Write the state back to the ledger
