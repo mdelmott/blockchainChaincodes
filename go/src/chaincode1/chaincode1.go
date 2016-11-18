@@ -97,22 +97,31 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 // Transaction makes payment of X units from A to B
 func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 
-	if function == "delete" {
-		// Deletes an entity from its state
-		return t.delete(stub, args)
+	function = args[0];
+
+	switch function {
+	//case "add" : return t.add(stub, args)
+	case "delete" : return t.delete(stub, args)
+	case "transaction" : return t.transaction(stub, args)
+	case "fusion" : return t.fusion(stub, args)
+	default: return nil, errors.New("Incorrect name of function")
 	}
+}
+
+
+func (t *SimpleChaincode) transaction(stub *shim.ChaincodeStub, args []string) ([]byte, error){
 
 	var A, B string    // Entities
 	var Aval, Bval int // Asset holdings
 	var X int          // Transaction value
 	var err error
 
-	if len(args) != 3 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 3")
+	if len(args) != 4 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 4")
 	}
 
-	A = args[0]
-	B = args[1]
+	A = args[1]
+	B = args[2]
 
 	// Get the state from the ledger
 	// TODO: will be nice to have a GetAllState call to ledger
@@ -135,7 +144,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	Bval, _ = strconv.Atoi(string(Bvalbytes))
 
 	// Perform the execution
-	X, err = strconv.Atoi(args[2])
+	X, err = strconv.Atoi(args[3])
 	if err != nil {
 		return nil, errors.New("Invalid transaction amount, expecting a integer value")
 	}
@@ -157,13 +166,55 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	return nil, nil
 }
 
-// Deletes an entity from state
-func (t *SimpleChaincode) delete(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 1")
+func (t *SimpleChaincode) fusion(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+	var A, B string
+	var Aval, Bval int
+
+	A = args[1]
+	B = args[2]
+
+	Avalbytes, err := stub.GetState(A)
+	if err != nil {
+		return nil, errors.New("Failed to get state")
+	}
+	if Avalbytes == nil {
+		return nil, errors.New("Entity not found")
+	}
+	Aval, _ = strconv.Atoi(string(Avalbytes))
+
+	Bvalbytes, err := stub.GetState(B)
+	if err != nil {
+		return nil, errors.New("Failed to get state")
+	}
+	if Bvalbytes == nil {
+		return nil, errors.New("Entity not found")
+	}
+	Bval, _ = strconv.Atoi(string(Bvalbytes))
+
+	Aval = Aval + Bval
+
+	// Write the state back to the ledger
+	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
+	if err != nil {
+		return nil, err
 	}
 
-	A := args[0]
+	err = stub.DelState(B)
+	if err != nil {
+		return nil, errors.New("Failed to delete state")
+	}
+
+	return nil, nil
+}
+
+
+// Deletes an entity from state
+func (t *SimpleChaincode) delete(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+	if len(args) != 2 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 2")
+	}
+
+	A := args[1]
 
 	// Delete the key from the state in ledger
 	err := stub.DelState(A)
