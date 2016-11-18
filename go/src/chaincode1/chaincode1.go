@@ -102,7 +102,7 @@ func (t *SimpleChaincode) insertTable(stub *shim.ChaincodeStub, args []string) (
 
 	var attr1, attr2, attr3, attr4 string
 
-	attr1 = "table"
+	attr1 = "aaa"
 	attr2 = args[1]
 	attr3 = args[2]
 	attr4 = args[3]
@@ -303,7 +303,7 @@ func (t *SimpleChaincode) queryTable(stub *shim.ChaincodeStub, args []string) ([
 
 	var columns []shim.Column
 
-	col1Val := "table"
+	col1Val := "aaa"
 	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
 	columns = append(columns, col1)
 
