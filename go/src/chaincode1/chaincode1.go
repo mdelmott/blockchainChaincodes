@@ -100,7 +100,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	function = args[0];
 
 	switch function {
-	//case "add" : return t.add(stub, args)
+	case "add" : return t.add(stub, args)
 	case "delete" : return t.delete(stub, args)
 	case "transaction" : return t.transaction(stub, args)
 	case "fusion" : return t.fusion(stub, args)
@@ -108,6 +108,24 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	}
 }
 
+
+func (t *SimpleChaincode) add(stub *shim.ChaincodeStub, args []string) ([]byte, error){
+	var A string    // Entities
+	var Aval int // Asset holdings
+	var err error
+
+	A = args[1];
+	Aval,err = strconv.Atoi(args[2]);
+	if err != nil {
+		return nil, errors.New("Expecting integer value for asset holding")
+	}
+	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
 
 func (t *SimpleChaincode) transaction(stub *shim.ChaincodeStub, args []string) ([]byte, error){
 
