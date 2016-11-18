@@ -307,9 +307,9 @@ func (t *SimpleChaincode) queryTable(stub *shim.ChaincodeStub, args []string) ([
 	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
 	columns = append(columns, col1)
 
-	rowChannel, err := stub.GetRows("tableTwo", columns)
+	rowChannel, err := stub.GetRows("table", columns)
 	if err != nil {
-		return nil, fmt.Errorf("getRowsTableTwo operation failed. %s", err)
+		return nil, fmt.Errorf("getTable operation failed. %s", err)
 	}
 
 	var rows []shim.Row
@@ -329,7 +329,7 @@ func (t *SimpleChaincode) queryTable(stub *shim.ChaincodeStub, args []string) ([
 
 	jsonRows, err := json.Marshal(rows)
 	if err != nil {
-		return nil, fmt.Errorf("getRowsTableTwo operation failed. Error marshaling JSON: %s", err)
+		return nil, fmt.Errorf("getTable operation failed. Error marshaling JSON: %s", err)
 	}
 
 	return jsonRows, nil
