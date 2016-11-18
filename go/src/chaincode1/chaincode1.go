@@ -99,7 +99,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 func (t *SimpleChaincode) insertTable(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 
-	var attr1, attr2, attr3, attr4;
+	var attr1, attr2, attr3, attr4 string
 
 	attr1 = "table"
 	attr2 = args[1]
