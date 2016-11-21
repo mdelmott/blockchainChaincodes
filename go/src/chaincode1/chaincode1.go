@@ -271,7 +271,7 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 	switch function {
 	case "queryElement" : return t.queryElement(stub, args)
 	case "queryTable" : return t.queryTable(stub, args)
-	default: return nil, errors.New("Incorrect name of function")
+	default: return nil, errors.New("Incorrect name of function, function received : %s", function)
 	}
 
 }
@@ -307,20 +307,7 @@ func (t *SimpleChaincode) queryTable(stub *shim.ChaincodeStub, args []string) ([
 	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
 	columns = append(columns, col1)
 
-	rowChannel, err := stub.GetRows("table", columns)
-	if err != nil {
-		return nil, fmt.Errorf("getTable operation failed. %s", err)
-	}
-
-	jsonRowChannel, err := json.Marshal(rowChannel)
-	if err != nil {
-		return nil, fmt.Errorf("getTable operation failed. Error marshaling JSON: %s", err)
-	}
-
-	return jsonRowChannel, nil
-
-
-	/*var rows []shim.Row
+	var rows []shim.Row
 	for {
 		select {
 		case row, ok := <-rowChannel:
@@ -340,7 +327,7 @@ func (t *SimpleChaincode) queryTable(stub *shim.ChaincodeStub, args []string) ([
 		return nil, fmt.Errorf("getTable operation failed. Error marshaling JSON: %s", err)
 	}
 
-	return jsonRows, nil*/
+	return jsonRows, nil
 }
 
 func main() {
