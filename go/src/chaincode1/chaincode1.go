@@ -271,7 +271,7 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 	switch function {
 	case "queryElement" : return t.queryElement(stub, args)
 	case "queryTable" : return t.queryTable(stub, args)
-	default: return nil, errors.New("Incorrect name of function, function received : %s", function)
+	default: return nil, fmt.Errorf("Incorrect name of function, function received : %s", function)
 	}
 
 }
